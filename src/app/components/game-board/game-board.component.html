@@ -1,0 +1,23 @@
+
+<div class="timer mt-3">
+  <h1>
+    <ng-container *ngIf="timer | date:'m' as minutes">
+      <span *ngIf="minutes !== '0'">{{timer | date:'m:'}}</span>
+    </ng-container>
+    <span style="margin-left : -0.5px;">{{timer | date:'ss.SS'}}</span>
+  </h1>
+</div>
+<div class="game-board mt-2">
+  <div *ngFor="let card of cards" class="card" [class]="cards.length == 6 ? 'gutter-1' : (cards.length == 10 ? 'gutter-2' : 'gutter-3')" [class.revealed]="card.revealed" (click)="onCardClicked(card)">
+    <div class="card-inner">
+      <div class="card-front">
+        <!-- Display card image -->
+        <img [src]="card.image" *ngIf="card.revealed || card.matched" />
+      </div>
+      <div class="card-back">
+        <!-- Display card back design -->
+        <img [src]="card.cardBack">
+      </div>
+    </div>
+  </div>
+</div>

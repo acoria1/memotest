@@ -1,0 +1,109 @@
+<ion-content class="content-with-full-height" id="main-content" [class]="openResultsModal ? 'opacity-60' : ''">
+  <section class="sticky">
+    <div class="bubbles">
+        <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+  </section>
+  <div *ngIf="presentFireworks" class="pyro">
+    <div class="before"></div>
+    <div class="after"></div>
+  </div>
+  <ng-container *ngIf="!signingOut;else spinner">
+    <ng-container *ngIf="selectedDifficulty; else selectDifficultyTemplate">
+      <app-game-board *ngIf="selectedDifficulty" [difficulty]="selectedDifficulty" [resetted]="resetBoard" (completed)="onGameCompleted($event)"></app-game-board>
+      <ion-fab slot="fixed" vertical="top" horizontal="end">
+        <ion-fab-button (click)="handleSingOut()" color="tertiary">
+          <ion-icon name="exit-outline" size="large"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+      <ion-modal *ngIf="openResultsModal" #resultsModal [isOpen]="openResultsModal" [presentingElement]="presentingElement" [style.height]="17 + modalHighScores.length * 8 + '%'">
+        <ng-template>
+          <ion-header>
+            <ion-toolbar color="warning">
+              <ion-title style="text-align : center; font-weight: bold;">RESULTADOS</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="list-content d-flex">
+            <div>
+              <ion-list lines="full" [inset]="true" [style.padding]="'0'">
+                <ion-item *ngFor="let s of modalHighScores; let i = index" class="custom-item" [color]="s.isLast ? 'danger' : 'primary'">
+                  <ion-avatar aria-hidden="true" slot="start" [style]="i >= 3 ? 'background: rebeccapurple;' : ''">
+                    <img *ngIf="i < 3" alt="" [src]="imagenesMedallas[i]" />
+                    <h1 *ngIf="i >= 3" style="margin : 0px; text-align : center; padding-top : 2px;">{{s.place}}</h1>
+                  </ion-avatar>
+                  <ion-label style="padding-left : 6px">
+                    <h1>
+                      <ng-container *ngIf="s.score | date:'m' as minutes">
+                        <span *ngIf="minutes !== '0'">{{ s.score | date:'m:' }}</span>
+                      </ng-container>
+                      {{ s.score | date:'ss.SS' }}
+                    </h1>
+                  </ion-label>
+                  <ion-note slot="end"><h3>{{s.userName}}</h3></ion-note>
+                </ion-item>
+              </ion-list>
+            </div>
+          </ion-content>
+          <ion-footer>
+            <ion-toolbar color="warning">
+              <ion-buttons slot="start">
+                <ion-button color="secondary" fill="solid" class="modal-btn" style="border-radius: 0 0 5px;" (click)="onMenuBtnClicked()">Volver al Menú</ion-button>
+              </ion-buttons>
+              <ion-buttons slot="end">
+                <ion-button color="success" fill="solid" class="modal-btn" style="border-radius: 0 0 0 5px;" (click)="onJugarBtnClicked()">Volver a Jugar</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-footer>
+        </ng-template>
+      </ion-modal>
+    </ng-container>
+    <ng-template #selectDifficultyTemplate>
+      <ion-header [translucent]="true">
+        <ion-toolbar color="tertiary">
+          <ion-buttons slot="start">
+            <ion-button (click)="onHomeIconClicked()">
+              <ion-icon slot="icon-only" name="home"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-title class='ion-text-center'>
+              {{showHighScoresComponent ? 'MEJORES PUNTAJES' : 'MENU PRINCIPAL'}}
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="onPodiumIconClicked()">
+              <ion-icon slot="icon-only" name="podium"></ion-icon>
+            </ion-button>
+            <ion-button (click)="handleSingOut()">
+              <ion-icon name="exit-outline" size="large"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ng-container *ngIf="!showHighScoresComponent; else highScoresTemplate">
+        <div class="container d-flex flex-column align-items-stretch">
+          <div class="row row-special"><ion-button (click)="selectedDifficulty = 'easy'" class="difficulty" color="success">FÁCIL</ion-button></div>
+          <div class="row row-special"><ion-button (click)="selectedDifficulty = 'medium'" class="difficulty" color="warning">NORMAL</ion-button></div>
+          <div class="row row-special"><ion-button (click)="selectedDifficulty = 'hard'" class="difficulty" color="danger">DIFÍCIL</ion-button></div>
+        </div>
+      </ng-container>
+      <ng-template #highScoresTemplate>
+        <div [style.height]="'94%'">
+          <app-highscores-list [highscores$]="highScores$"></app-highscores-list>
+        </div>
+      </ng-template>
+    </ng-template>
+  </ng-container>
+</ion-content>
+
+
+<ng-template #spinner>
+    <app-spinner [optionalMessage]="'Cerrando Sesión'" [spinnerType]="'bubbles'"></app-spinner>
+</ng-template>

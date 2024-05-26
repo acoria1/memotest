@@ -1,0 +1,88 @@
+<ion-content [fullscreen]="true">
+  <section class="sticky">
+    <div class="bubbles">
+        <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+    </div>
+  </section>
+  <div *ngIf="!attemptingSingIn;else spinner" class="d-flex flex-column p-4" style="min-height: 100%;">
+    <div class="row" style="margin-bottom: 3vh">
+      <div class="col-6 offset-1 pr-3">
+        <div class="row">
+          <div class="col-2 h1 heading">
+            >
+          </div>
+          <div class="col-10">
+            <div class="h1 heading ion-text-start">Hola..!</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2 para ion-text-start">
+            >
+          </div>
+          <div class="col-10">
+            <div class="para mr-5 ion-text-start">Ingresa tus credenciales</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-4 offset-1">
+        <ion-img class="h-100 w-100" src="../assets/icon/memotest.png"></ion-img>
+      </div>
+    </div>
+    <div class="row card">
+      <div style="padding: 30px 30px 0 30px;">
+        <app-custom-buttons *ngIf="mockUsersButtons.length > 0"  [buttons]="mockUsersButtons" (buttonClicked)="loadLoginForm($event)" [classWrapper]="'feature-container-login'" [columns]="3"></app-custom-buttons>
+      </div>
+      <div class="container d-flex flex-column align-items-center mb-4">
+        <div class="row w-100">
+          <div class="col-3 h4" style="margin-left : 6%">Admin</div>
+          <div class="col-4 h4" style="margin-left : 2%; ; text-align : center;">Usuario</div>
+          <div class="col-4 h4" style="text-align : center;">Anónimo</div>
+        </div>
+      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="handleLogIn()">
+        <ion-item class="mb-4" lines="full" color="danger">
+          <ion-label position="floating" color="warning">Correo electrónico</ion-label>
+          <ion-input  type="email" placeholder="nombre.apellido@dominio.com" formControlName="email" legacy="true"></ion-input>
+          <ion-note *ngIf="loginForm.get('email')!.touched" slot="error">formato inválido de email</ion-note>
+        </ion-item>
+        <ion-item class="mb-5" lines="full" color="danger">
+          <ion-label position="floating" color="warning">Contraseña</ion-label>
+          <ion-input [type]="hidePassword? 'password':'text'" placeholder="**********" formControlName="password" legacy="true"></ion-input>
+          <ion-button size="default" slot="end" fill="clear" (click)="togglePasswordVisibility()" class="pt-3 icon-button">
+            <ion-icon [name]="hidePassword ? 'eye-off-outline' : 'eye-outline' " color="light" class="iconEye"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <div class="signup-text mb-3">
+          ¿No tienes cuenta? &nbsp; 
+          <a class="mat-subheading-2" routerLink="/register" routerLinkActive="active">
+            <u class="font-weight-bold">Registrate</u>
+          </a>
+        </div>
+        <div class="mt-5">
+          <ion-button class="login-button mt-4 mb-3" strong="true" type="submit" expand="block" [disabled]="!loginForm.valid || invalidCredentials" color="warning">
+            <h1 style="font-size: 46px;">ENTRAR</h1>
+          </ion-button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template #spinner>
+    <app-spinner [optionalMessage]="'Ingresando'" [spinnerType]="'circles'"></app-spinner>
+  </ng-template>
+</ion-content>
+<!-- <ion-footer color="white">
+  <ion-toolbar>
+    <p class="copyright">Derechos reservados ⒸACoria 2023</p>
+  </ion-toolbar>
+</ion-footer> -->
+  
+  

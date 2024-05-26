@@ -1,0 +1,49 @@
+<ion-content color="dark" #highscoresRoot>
+  <ng-container *ngIf="(highscores$ | async) as scores; else loadingBarTemplate;">
+    <ng-container *ngIf="!showLoading; else loadingBarTemplate;">
+      <ion-list lines="full" [inset]="false" [style.padding]="'18px 0px 0px 0px'" [style.background]="'#222428'">
+        <ion-item *ngFor="let score of scores[segmentValue].slice(0,5); let i = index" class="custom-item" color="dark">
+          <ion-avatar aria-hidden="true" slot="start" style="height : 100px; width : 100px" [style]="i >= 3 ? 'background: rebeccapurple;' : ''">
+            <img *ngIf="i < 3" alt="" [src]="imagenesMedallas[i]" />
+            <h1 *ngIf="i >= 3" style="margin : 0px; text-align : center; padding-top : 19px; font-size : 50px">{{i + 1}}</h1>
+          </ion-avatar>
+          <ion-label style="padding-left : 20px">
+            <h1 style="font-size : 46px">
+              <ng-container *ngIf="score.score | date:'m' as minutes">
+                <span *ngIf="minutes !== '0'">{{ score.score | date:'m:' }}</span>
+              </ng-container>
+              {{ score.score | date:'ss.SS' }}
+            </h1>
+          </ion-label>
+          <ion-note slot="end" class="h-100 d-flex align-items-center"><h3 [style.color]="'darkorange'">{{score.userName}}</h3></ion-note>
+        </ion-item>
+      </ion-list>
+      <ion-footer>
+        <ion-toolbar color="danger">
+          <ion-segment [(ngModel)]="segmentValue" #segment>
+            <ion-segment-button value="easy">
+              <ion-label>FÁCIL</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="medium">
+              <ion-label>NORMAL</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="hard">
+              <ion-label>DIFÍCIL</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-container>
+  </ng-container>
+  <ng-template #loadingBarTemplate>
+    <div class="container">
+        <div class="row h1 mb-4 ion-text-center"><h1>Cargando Resultados...</h1></div>
+        <div class="row">
+          <ion-progress-bar [value]="loadingProgress" color="warning"></ion-progress-bar>
+        </div>
+    </div>
+  </ng-template>
+</ion-content>
+
+
+
